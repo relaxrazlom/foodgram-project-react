@@ -1,6 +1,7 @@
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
-from .models import User
+
+from users.models import User
 
 
 class Tag(models.Model):
@@ -30,10 +31,6 @@ class Ingredient(models.Model):
         max_length=10,
         verbose_name="Единица измерения"
     )
-    score = models.IntegerField(
-        validators=[MinValueValidator(1)],
-        verbose_name='Количество'
-    )
 
     def __str__(self):
         return self.name
@@ -56,7 +53,7 @@ class Recipe(models.Model):
     )
     text = models.TextField(verbose_name='Текстовое описание')
     pub_date = models.DateTimeField(auto_now_add=True)
-    ingridients = models.ManyToManyField(
+    ingredients = models.ManyToManyField(
         Ingredient,
         related_name='recipes',
     )
@@ -80,7 +77,7 @@ class Follow(models.Model):
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name='user'
+        related_name='follower'
     )
     following = models.ForeignKey(
         User,
@@ -93,7 +90,7 @@ class Favourite(models.Model):
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name='user'
+        related_name='favourites_user'
     )
     favourites = models.ForeignKey(
         Recipe,
@@ -106,7 +103,7 @@ class Shopping_Cart(models.Model):
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name='user'
+        related_name='shopping_user'
     )
     favourites = models.ForeignKey(
         Recipe,
