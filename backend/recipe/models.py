@@ -18,6 +18,10 @@ class Tag(models.Model):
         unique=True,
         verbose_name='Слаг')
 
+    class Meta:
+        verbose_name = 'Тег'
+        verbose_name_plural = 'Теги'
+
     def __str__(self):
         return self.name
 
@@ -31,7 +35,11 @@ class Ingredient(models.Model):
         max_length=10,
         verbose_name="Единица измерения"
     )
-
+    
+    class Meta:
+        verbose_name = 'Ингредиент'
+        verbose_name_plural = 'Ингредиенты'
+    
     def __str__(self):
         return self.name
 
@@ -55,11 +63,11 @@ class Recipe(models.Model):
     pub_date = models.DateTimeField(auto_now_add=True)
     ingredients = models.ManyToManyField(
         Ingredient,
-        related_name='recipes',
+        through='IngredientRecipe'
     )
     tags = models.ManyToManyField(
         Tag,
-        related_name='recipes',
+        through='TagRecipe'
     )
     cooking_time = models.IntegerField(
         validators=[MinValueValidator(1), MaxValueValidator(360)],
@@ -71,6 +79,49 @@ class Recipe(models.Model):
     
     class Meta:
         ordering = ('pub_date',)
+        verbose_name = 'Рецепт'
+        verbose_name_plural = 'Рецепты'
+
+
+class IngredientRecipe(models.Model):
+    ingredient = models.ForeignKey(
+        Ingredient,
+        on_delete=models.CASCADE,
+        verbose_name='Ингредиенты к рецепту'
+    )
+    recipe = models.ForeignKey(
+        Recipe,
+        on_delete=models.CASCADE,
+        verbose_name='Рецепт'
+    )
+    amount = models.PositiveBigIntegerField(
+        validators=[
+            MinValueValidator(1),
+            MaxValueValidator(1000000)
+        ],
+        verbose_name='Количество'
+    )
+
+    class Meta:
+        verbose_name = 'Выбор Ингредиента'
+        verbose_name_plural = 'Выбор Ингредиента'
+
+
+class TagRecipe(models.Model):
+    tag = models.ForeignKey(
+        Tag,
+        on_delete=models.CASCADE,
+        verbose_name='Тег'
+    )
+    recipe = models.ForeignKey(
+        Recipe,
+        on_delete=models.CASCADE,
+        verbose_name='Рецепт'
+    )
+
+    class Meta:
+        verbose_name = 'Выбор Тега'
+        verbose_name_plural = 'Выбор Тега'
 
 
 class Follow(models.Model):
