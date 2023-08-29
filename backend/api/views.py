@@ -93,7 +93,7 @@ class SubscribeView(APIView):
         return Response(
             {"errors": "Отсутствует подписка"},
             status=status.HTTP_400_BAD_REQUEST
-            )
+        )
 
 
 class FavoriteView(APIView):
@@ -108,7 +108,7 @@ class FavoriteView(APIView):
                 return Response(
                     {"errors": "Рецепт уже избранное"},
                     status=status.HTTP_400_BAD_REQUEST
-                    )
+                )
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     def delete(self, request, pk):
@@ -120,7 +120,7 @@ class FavoriteView(APIView):
         return Response(
             {"errors": "Отсутствует рецепт в избранное"},
             status=status.HTTP_400_BAD_REQUEST
-            )
+        )
 
 
 class ShoppingCartView(APIView):
@@ -135,7 +135,7 @@ class ShoppingCartView(APIView):
                 return Response(
                     {"errors": "Рецепт уже в корзине"},
                     status=status.HTTP_400_BAD_REQUEST
-                    )
+                )
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     def delete(self, request, pk):
@@ -149,7 +149,7 @@ class ShoppingCartView(APIView):
         return Response(
             {"errors": "Отсутствует рецепт в корзине"},
             status=status.HTTP_400_BAD_REQUEST
-            )
+        )
 
 
 class ShoppingCartDownloadView(APIView):
@@ -170,7 +170,7 @@ class ShoppingCartDownloadView(APIView):
         shopping_list = [
             f'Дата: {today:%Y-%m-%d}\n\n'
             'СПИСОК ПОКУПОК:\n'
-            ]
+        ]
         for key, value in data.items():
             shopping_list.append(f'- {key}: {value} \n')
         response = HttpResponse(shopping_list, content_type='text/plain')

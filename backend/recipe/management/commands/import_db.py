@@ -5,14 +5,12 @@ from django.core.management import BaseCommand
 from recipe.models import Ingredient
 
 
-
 def import_csv_db():
     model = Ingredient
     file = 'data/ingredients.csv'
     for row in csv.DictReader(open(file, encoding='utf-8')):
         p = model(name=row['name'],
-                  measurement_unit=row['measurement_unit']
-        )
+                  measurement_unit=row['measurement_unit'])
         p.save()
     print(f"Загрузка данных из таблицы {file} завершена успешно.")
 
