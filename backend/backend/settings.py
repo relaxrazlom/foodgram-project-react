@@ -1,20 +1,17 @@
 import os
+
 from pathlib import Path
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
-SECRET_KEY =  os.getenv('SECRET_KEY', '')
-
+SECRET_KEY = os.getenv('SECRET_KEY', '')
 
 DEBUG = os.getenv('DEBUG', False)
 
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOST', '').split(',')
 
 AUTH_USER_MODEL = 'users.User'
-
-
 
 INSTALLED_APPS = [
     'recipe.apps.RecipeConfig',
@@ -121,7 +118,7 @@ REST_FRAMEWORK = {
 }
 
 DJOSER = {
-    'HIDE_USERS': False, 
+    'HIDE_USERS': False,
     'SERIALIZERS': {
         'user': 'api.serializers.UserSerializer',
         'current_user': 'api.serializers.UserSerializer',
