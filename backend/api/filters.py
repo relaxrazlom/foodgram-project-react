@@ -1,11 +1,21 @@
 from django_filters import rest_framework as filters
 
-from recipe.models import Recipe, Tag
+from recipe.models import Recipe, Tag, Ingredient
 from users.models import User
 
 
-class IngredientSearchFilter(filters.SearchFilter):
-    search_param = 'name'
+class IngredientFilter(filters.FilterSet):
+
+    name = filters.CharFilter(
+        field_name='name',
+        method='ingredient'
+    )
+
+    def ingredient(self, queryset, name, value):
+        result_1 = Ingredient.objects.filter(name__iregex=fr'^{value}')
+        result_2 = Ingredient.objects.filter(name__iregex=fr'\s{value}')
+        result = result_1 | result_2
+        return result
 
 
 class RecipeFilter(filters.FilterSet):

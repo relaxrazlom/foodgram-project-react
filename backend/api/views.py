@@ -8,7 +8,7 @@ from datetime import datetime
 
 from collections import defaultdict
 
-from rest_framework import generics, status, viewsets, permissions, filters
+from rest_framework import generics, status, viewsets, permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
@@ -18,7 +18,7 @@ from recipe.models import (
 )
 from api.pagination import RecipePagination
 from api.permissions import IsAuthorActionOrAdminOrReadOnly
-from api.filters import RecipeFilter, IngredientSearchFilter
+from api.filters import RecipeFilter, IngredientFilter
 from api.serializers import (
     RecipeReadSerializer, RecipeCreateSerializer,
     IngredientSerializer, TagSerializer, FavoritesSerializer,
@@ -48,11 +48,7 @@ class IngredientViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = IngredientSerializer
     permission_classes = [permissions.AllowAny,]
     pagination_class = None
-    filter_backends = (IngredientSearchFilter, filters.SearchFilter,)
-    search_fields = ('^name',)
-    filterset_fields = {
-        'name': ['icontains']
-    }
+    filterset_class = IngredientFilter
 
 
 class TagViewSet(viewsets.ReadOnlyModelViewSet):
