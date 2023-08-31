@@ -30,7 +30,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
     queryset = Recipe.objects.all()
     pagination_class = RecipePagination
     http_method_names = ['get', 'post', 'patch', 'delete']
-    permission_classes = [IsAuthorActionOrAdminOrReadOnly,]
+    permission_classes = (IsAuthorActionOrAdminOrReadOnly,)
     filterset_class = RecipeFilter
     filter_backends = (DjangoFilterBackend,)
 
@@ -46,7 +46,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
 class IngredientViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Ingredient.objects.all()
     serializer_class = IngredientSerializer
-    permission_classes = [permissions.AllowAny,]
+    permission_classes = (permissions.AllowAny,)
     pagination_class = None
     filterset_class = IngredientSearchFilter
 
@@ -54,7 +54,7 @@ class IngredientViewSet(viewsets.ReadOnlyModelViewSet):
 class TagViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
-    permission_classes = [permissions.AllowAny,]
+    permission_classes = (permissions.AllowAny,)
     pagination_class = None
 
 
