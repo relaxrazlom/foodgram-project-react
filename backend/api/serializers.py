@@ -181,10 +181,6 @@ class RecipeCreateSerializer(serializers.ModelSerializer):
         self._create_ingredients(instance, ingredients)
         tags = self.initial_data.get('tags')
         instance.tags.set(tags)
-        instance.image = validated_data['image']
-        instance.name = validated_data['name']
-        instance.text = validated_data['text']
-        instance.cooking_time = validated_data['cooking_time']
         instance.save()
         return instance
 
