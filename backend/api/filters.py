@@ -4,7 +4,7 @@ from recipe.models import Recipe, Tag, Ingredient
 from users.models import User
 
 
-class IngredientFilter(filters.FilterSet):
+class IngredientSearchFilter(filters.FilterSet):
 
     name = filters.CharFilter(
         field_name='name',
