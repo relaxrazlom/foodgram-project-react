@@ -22,5 +22,5 @@ urlpatterns = [
          ShoppingCartDownloadView.as_view()),
     path('', include(router.urls)),
     path('', include('djoser.urls')),
-    re_path('auth/', include('djoser.urls.authtoken')),
+    path('auth/', include('djoser.urls.authtoken')),
 ]
