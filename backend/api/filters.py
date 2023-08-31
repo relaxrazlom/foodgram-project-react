@@ -4,6 +4,10 @@ from recipe.models import Recipe, Tag
 from users.models import User
 
 
+class IngredientSearchFilter(filters.SearchFilter):
+    search_param = 'name'
+
+
 class RecipeFilter(filters.FilterSet):
     tags = filters.filters.ModelMultipleChoiceFilter(
         queryset=Tag.objects.all(),

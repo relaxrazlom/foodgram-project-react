@@ -18,7 +18,7 @@ from recipe.models import (
 )
 from api.pagination import RecipePagination
 from api.permissions import IsAuthorActionOrAdminOrReadOnly
-from api.filters import RecipeFilter
+from api.filters import RecipeFilter, IngredientSearchFilter
 from api.serializers import (
     RecipeReadSerializer, RecipeCreateSerializer,
     IngredientSerializer, TagSerializer, FavoritesSerializer,
@@ -48,8 +48,11 @@ class IngredientViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = IngredientSerializer
     permission_classes = [permissions.AllowAny,]
     pagination_class = None
-    filter_backends = (filters.SearchFilter,)
+    filter_backends = (IngredientSearchFilter, filters.SearchFilter,)
     search_fields = ('^name',)
+    filterset_fields = {
+        'name': ['icontains']
+    }
 
 
 class TagViewSet(viewsets.ReadOnlyModelViewSet):
