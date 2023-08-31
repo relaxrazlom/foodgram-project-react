@@ -110,7 +110,7 @@ class Base64ImageField(serializers.ImageField):
 
 
 class RecipeReadSerializer(serializers.ModelSerializer):
-    image = Base64ImageField(use_url=True)
+    image = serializers.ReadOnlyField(source='image.url')
     tags = TagSerializer(read_only=True, many=True)
     author = UserSerializer(read_only=True)
     ingredients = IngredientRecipeReadSerializer(
@@ -196,7 +196,7 @@ class RecipeCreateSerializer(serializers.ModelSerializer):
 class FavoritesSerializer(serializers.ModelSerializer):
     id = serializers.ReadOnlyField(source='favorites.id')
     name = serializers.ReadOnlyField(source='favorites.name')
-    image = serializers.ImageField(read_only=True, source='favorites.image')
+    image = serializers.ReadOnlyField(source='image.url')
     cooking_time = serializers.ReadOnlyField(source='favorites.cooking_time')
 
     class Meta:
@@ -207,7 +207,7 @@ class FavoritesSerializer(serializers.ModelSerializer):
 class ShoppingCartSerializer(serializers.ModelSerializer):
     id = serializers.ReadOnlyField(source='favorites.id')
     name = serializers.ReadOnlyField(source='favorites.name')
-    image = serializers.ImageField(read_only=True, source='favorites.image')
+    image = serializers.ReadOnlyField(source='image.url')
     cooking_time = serializers.ReadOnlyField(source='favorites.cooking_time')
 
     class Meta:
