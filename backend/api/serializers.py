@@ -1,5 +1,6 @@
-from drf_extra_fields.fields import Base64ImageField
+import base64
 
+from django.core.files.base import ContentFile
 from rest_framework import serializers
 
 from recipe.models import (
@@ -97,8 +98,19 @@ class IngredientRecipeSerializer(serializers.ModelSerializer):
         fields = ('id', 'amount')
 
 
+class Base64ImageField(serializers.ImageField):
+
+    def to_internal_value(self, data):
+        if isinstance(data, str) and data.startswith('data:image'):
+            format, imgstr = data.split(';base64,')
+            ext = format.split('/')[-1]
+            name = {self.context["request"].user.username}
+            data = ContentFile(base64.b64decode(imgstr), name=f'{name}.' + ext)
+        return super().to_internal_value(data)
+
+
 class RecipeReadSerializer(serializers.ModelSerializer):
-    image = Base64ImageField()
+    image = Base64ImageField(use_url=True)
     tags = TagSerializer(read_only=True, many=True)
     author = UserSerializer(read_only=True)
     ingredients = IngredientRecipeReadSerializer(
@@ -136,7 +148,7 @@ class RecipeCreateSerializer(serializers.ModelSerializer):
         many=True, queryset=Tag.objects.all()
     )
     ingredients = IngredientRecipeSerializer(many=True)
-    image = Base64ImageField()
+    image = Base64ImageField(use_url=True)
 
     class Meta:
         fields = (
