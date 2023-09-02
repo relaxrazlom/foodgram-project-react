@@ -23,13 +23,10 @@ class UserSerializer(serializers.ModelSerializer):
         user = self.context['request'].user
         if not user.id:
             return False
-        if Subscribe.objects.filter(user=user, subscription=obj).values():
-            return True
-        return False
+        return user.subscriptionuser.filter(subscription=obj).exists()
 
 
 class RecipeSubscriptionsSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Recipe
         fields = ('id', 'name', 'image', 'cooking_time')
@@ -61,18 +58,17 @@ class SubscribeSerializer(serializers.ModelSerializer):
         ).data
 
     def get_is_subscribed(self, obj):
+        """Возврат булевого значения True при активации подписки."""
         return True
 
 
 class IngredientSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Ingredient
         fields = ('id', 'name', 'measurement_unit')
 
 
 class TagSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Tag
         fields = ('id', 'name', 'color', 'slug')
@@ -99,7 +95,6 @@ class IngredientRecipeSerializer(serializers.ModelSerializer):
 
 
 class Base64ImageField(serializers.ImageField):
-
     def to_internal_value(self, data):
         if isinstance(data, str) and data.startswith('data:image'):
             format, imgstr = data.split(';base64,')
@@ -130,17 +125,13 @@ class RecipeReadSerializer(serializers.ModelSerializer):
         user = self.context['request'].user
         if not user.id:
             return False
-        if Favorite.objects.filter(user=user, favorites=obj).values():
-            return True
-        return False
+        return user.favoritesuser.filter(favorites=obj).exists()
 
     def get_is_in_shopping_cart(self, obj):
         user = self.context['request'].user
         if not user.id:
             return False
-        if Shopping_Cart.objects.filter(user=user, favorites=obj).values():
-            return True
-        return False
+        return user.shoppinguser.filter(favorites=obj).exists()
 
 
 class RecipeCreateSerializer(serializers.ModelSerializer):

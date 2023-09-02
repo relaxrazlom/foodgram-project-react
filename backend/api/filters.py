@@ -5,7 +5,6 @@ from users.models import User
 
 
 class IngredientSearchFilter(filters.FilterSet):
-
     name = filters.CharFilter(
         field_name='name',
         method='ingredient'
@@ -14,8 +13,7 @@ class IngredientSearchFilter(filters.FilterSet):
     def ingredient(self, queryset, name, value):
         result_1 = Ingredient.objects.filter(name__iregex=fr'^{value}')
         result_2 = Ingredient.objects.filter(name__iregex=fr'\s{value}')
-        result = result_1 | result_2
-        return result
+        return result_1 | result_2
 
 
 class RecipeFilter(filters.FilterSet):

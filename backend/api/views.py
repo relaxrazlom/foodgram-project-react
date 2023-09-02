@@ -1,20 +1,17 @@
-from django.http import HttpResponse
-
-from django.shortcuts import get_object_or_404
-
-from django_filters.rest_framework import DjangoFilterBackend
-
 from datetime import datetime
-
 from collections import defaultdict
+
+from django.http import HttpResponse
+from django.shortcuts import get_object_or_404
+from django_filters.rest_framework import DjangoFilterBackend
 
 from rest_framework import generics, status, viewsets, permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from users.models import User, Subscribe
+from users.models import User
 from recipe.models import (
-    Recipe, Ingredient, Tag, Favorite, Shopping_Cart, IngredientRecipe
+    Recipe, Ingredient, Tag, IngredientRecipe
 )
 from api.pagination import RecipePagination
 from api.permissions import IsAuthorActionOrAdminOrReadOnly
@@ -63,11 +60,10 @@ class SubscriptionsView(generics.ListAPIView):
     permission_classes = (permissions.IsAuthenticated,)
 
     def get_queryset(self):
-        return Subscribe.objects.filter(user=self.request.user)
+        return self.request.user.subscriptionuser.all()
 
 
 class SubscribeView(APIView):
-
     def post(self, request, pk):
         subscription = get_object_or_404(User, pk=pk)
         serializer = SubscribeSerializer(
@@ -85,8 +81,7 @@ class SubscribeView(APIView):
 
     def delete(self, request, pk):
         subscription = get_object_or_404(User, pk=pk)
-        instance = Subscribe.objects.filter(
-            user=request.user,
+        instance = self.request.user.subscriptionuser.filter(
             subscription=subscription
         )
         if instance:
@@ -99,7 +94,6 @@ class SubscribeView(APIView):
 
 
 class FavoriteView(APIView):
-
     def post(self, request, pk):
         recipe = get_object_or_404(Recipe, pk=pk)
         serializer = FavoritesSerializer(data=request.data)
@@ -115,7 +109,7 @@ class FavoriteView(APIView):
 
     def delete(self, request, pk):
         recipe = get_object_or_404(Recipe, pk=pk)
-        instance = Favorite.objects.filter(user=request.user, favorites=recipe)
+        instance = self.request.user.favoritesuser.filter(favorites=recipe)
         if instance:
             instance.delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
@@ -142,9 +136,7 @@ class ShoppingCartView(APIView):
 
     def delete(self, request, pk):
         recipe = get_object_or_404(Recipe, pk=pk)
-        instance = Shopping_Cart.objects.filter(
-            user=request.user, favorites=recipe
-        )
+        instance = self.request.user.shoppinguser.filter(favorites=recipe)
         if instance:
             instance.delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
