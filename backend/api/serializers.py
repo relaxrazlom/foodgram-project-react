@@ -149,7 +149,6 @@ class RecipeCreateSerializer(serializers.ModelSerializer):
         model = Recipe
 
     def _create_ingredients(self, recipe, ingredients):
-
         obj = (IngredientRecipe(
             ingredient_id=ingredient['id'],
             amount=ingredient['amount'],
